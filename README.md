@@ -54,6 +54,7 @@ MagicSquare_xx/
 | [Session 3 워크북](Report/02.%20MagicSquare_1004%20Session3%20워크북.md) | Rule / Command / Test Loop |
 | [RED To-Do (상세)](docs/tdd-red-todo.md) | Dual-Track RED 설계·Given/Then·pytest 경로 |
 | [RED Phase Planning 보고서](Report/04.%20MagicSquare_1004%20RED%20Phase%20Planning%20보고서.md) | RED 설계·README 체크리스트 세션 |
+| [RED 작업 보고서](Report/05.%20MagicSquare_1004%20RED%20%EC%9E%91%EC%97%85%20%EB%B3%B4%EA%B3%A0%EC%84%9C.md) | RED 스켈레톤·브랜치 정리·D-LOC-01 |
 
 ---
 
