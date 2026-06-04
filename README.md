@@ -90,6 +90,9 @@ python -m pytest tests/entity/test_d_loc_01.py -v
 | [RED 작업 보고서](Report/05.%20MagicSquare_1004%20RED%20%EC%9E%91%EC%97%85%20%EB%B3%B4%EA%B3%A0%EC%84%9C.md) | RED 스켈레톤·브랜치 정리·D-LOC-01 |
 | [GREEN 작업 보고서](Report/06.%20MagicSquare_1004%20GREEN%20%EC%9E%91%EC%97%85%20%EB%B3%B4%EA%B3%A0%EC%84%9C.md) | D-LOC-01 최소 구현·`.venv` |
 | [Golden Master 보고서](Report/07.%20MagicSquare_1004%20Golden%20Master%20%EB%B3%B4%EA%B3%A0%EC%84%9C.md) | D-SOL-01 golden · matched 검증 |
+| [REFACTOR Code Smell 보고서](Report/08.%20MagicSquare_1004%20REFACTOR%20Code%20Smell%20%EB%B3%B4%EA%B3%A0%EC%84%9C.md) | 스멜 분석 · P0/P1/P2 · `/refactor-safe` 후보 |
+
+**Prompting (Transcript):** `Prompting/07. cursor_magic_square_refactor_code_smell.md` — Report/08 세션 Export
 
 ---
 
@@ -117,7 +120,7 @@ python -m pytest tests/entity/test_d_loc_01.py -v
 | ECB Harness + `.cursorrules` | ✅ 완료 |
 | **RED** (`red` 브랜치) | ⬜ 진행 중 — D-LOC-01 skeleton 등 |
 | **GREEN** (`green` 브랜치) | ✅ **entity** D-LOC-01 · D-SOL-01 PASS + Golden Master |
-| REFACTOR (`refactoring`) | ⬜ 예정 |
+| **REFACTOR** (`refactoring`) | 🔄 **분석 완료** — [Report/08](Report/08.%20MagicSquare_1004%20REFACTOR%20Code%20Smell%20%EB%B3%B4%EA%B3%A0%EC%84%9C.md) · 구현(`/refactor-safe`) 예정 |
 
 상세 Given/Then·pytest 명령: [`docs/tdd-red-todo.md`](docs/tdd-red-todo.md)
 
@@ -148,9 +151,10 @@ Dual-Track TDD **RED** — `tests/`만 작성, **pytest FAIL** 확인 후 체크
 
 ### Logic · entity (`tests/entity/`)
 
-**Fixture (`conftest.py`, 로직 없음)**
+**Fixture (`tests/conftest.py` — G1 SSOT는 GREEN 구현 기준, `docs/tdd-red-todo.md` 와 좌표·sentinel 정합 필요)**
 
-- [ ] G1_GRID — 빈칸 (2,4), (3,1)
+- [x] G1 (`grid_g1`) — 빈칸 **(2,2), (3,3)** · sentinel `0` (`BLANK_CELL`) — D-LOC-01/D-SOL-01 PASS
+- [ ] G1_GRID (RED 문서안) — 빈칸 (2,4), (3,1) · `None` — Report/08 P10 정합 작업
 - [ ] G2_GRID — 빈칸 (2,1), (2,3)
 - [ ] G_valid — 완성 4×4 (D-007)
 - [ ] 빈칸 sentinel = `None` 확정
@@ -263,6 +267,39 @@ Remove-Item Env:UPDATE_GOLDEN
 - [x] entity GREEN — D-LOC-01, D-SOL-01
 - [x] Golden Master — `d_sol_01_g1_step_a.approved.txt` matched
 - [ ] `pytest tests/control/ -v` — control Validator (Session 3)
+
+---
+
+## REFACTOR 단계 (`refactoring` 브랜치)
+
+**전제:** Green 고정 — `pytest tests/ -v` **전부 PASS** (현재 entity 2건).
+
+```bash
+git checkout refactoring
+git merge green    # GREEN·Golden 반영 후
+.\.venv\Scripts\python.exe -m pytest tests/ -v
+```
+
+| 항목 | 내용 |
+|------|------|
+| 분석 보고서 | [Report/08](Report/08.%20MagicSquare_1004%20REFACTOR%20Code%20Smell%20%EB%B3%B4%EA%B3%A0%EC%84%9C.md) |
+| Transcript | `Prompting/07. cursor_magic_square_refactor_code_smell.md` |
+| Change Budget | 파일≤3 · 클래스≤1 · 메서드≤3 |
+| **1차 후보 (P0)** | `format_step_a_golden` → `tests/_golden_format.py` (**Move Function**) |
+
+```text
+/refactor-safe
+후보: A — format_step_a_golden Move Function (Budget: 파일≤3, 메서드≤1)
+```
+
+| 체크 | 상태 |
+|------|------|
+| 코드 스멜 스캔 (`/refactor-smell`) | ✅ Report/08 |
+| P0 `format_step_a_golden` entity 탈출 | ⬜ |
+| P0 `solve_step_a` → `control` | ⬜ |
+| G1·RED 문서 SSOT 정합 (P10) | ⬜ |
+
+- [ ] REFACTOR 후 `pytest tests/ -v` — 동작 동일·PASS 유지
 
 ---
 
