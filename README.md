@@ -40,7 +40,40 @@ MagicSquare_xx/
 └── Prompting/
 ```
 
-> Harness: `pyproject.toml` + 빈 `src/`·`tests/` 패키지. RED는 **`tests/`만** 작성 (`src/`는 GREEN부터).
+> Harness: `pyproject.toml` + `src/`·`tests/`. `pyproject.toml`의 `pythonpath`·`--import-mode=importlib`로 `entity` import.
+
+---
+
+## 개발 환경 (`.venv`)
+
+프로젝트 루트에서 **가상환경**을 만들고 pytest를 설치한다. (`src/` 패키지 설치 없이 `pythonpath = ["src"]`로 테스트)
+
+**Windows PowerShell (최초 1회):**
+
+```powershell
+cd C:\DEV\MagicSquare_xx
+python -m venv .venv
+.\scripts\setup-venv.ps1
+# 또는
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+```
+
+**활성화 후 테스트:**
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+pytest
+python -m pytest tests/entity/test_d_loc_01.py::test_d_loc_01_blank_coords_row_major -v
+python -m pytest tests/entity/test_d_loc_01.py -v
+```
+
+**활성화 없이:**
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/entity/test_d_loc_01.py -v
+```
+
+회사 프록시 등으로 pip SSL 오류가 나면 `scripts\setup-venv.ps1`의 `--trusted-host` 옵션을 사용한다. Cursor/VS Code는 인터프리터를 **`.venv\Scripts\python.exe`** 로 선택한다.
 
 ---
 
@@ -55,6 +88,7 @@ MagicSquare_xx/
 | [RED To-Do (상세)](docs/tdd-red-todo.md) | Dual-Track RED 설계·Given/Then·pytest 경로 |
 | [RED Phase Planning 보고서](Report/04.%20MagicSquare_1004%20RED%20Phase%20Planning%20보고서.md) | RED 설계·README 체크리스트 세션 |
 | [RED 작업 보고서](Report/05.%20MagicSquare_1004%20RED%20%EC%9E%91%EC%97%85%20%EB%B3%B4%EA%B3%A0%EC%84%9C.md) | RED 스켈레톤·브랜치 정리·D-LOC-01 |
+| [GREEN 작업 보고서](Report/06.%20MagicSquare_1004%20GREEN%20%EC%9E%91%EC%97%85%20%EB%B3%B4%EA%B3%A0%EC%84%9C.md) | D-LOC-01 최소 구현·`.venv` |
 
 ---
 
