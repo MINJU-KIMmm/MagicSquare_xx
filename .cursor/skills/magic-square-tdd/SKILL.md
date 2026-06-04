@@ -143,7 +143,7 @@ entity/control은 **예외 코드 문자열·HTTP 코드**를 만들지 않는�
 | 6 | **ECB·Mock·E00x 준수 여부** (위반 시 수정 내역) |
 | 7 | **다음 단계** (다음 RED ID 또는 Green 대상) |
 
-git commit·push는 **사용자 요청 시에만**.
+git commit·push·PR은 **사용자 요청 시에만**. 업로드 시 **`/push-pr`** — 현재 브랜치만 push, `main` 대비 diff 있으면 PR. `git push --all`·`branch -f` **금지**.
 
 ---
 

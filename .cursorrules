@@ -36,12 +36,20 @@ boundary → control → entity
 - Green: 해당 테스트를 통과하는 **최소** 구현만
 - Refactor: Green 유지하며 구조 개선; MagicConstant·ECB 경계 유지
 
+## Git · PR (변경 → PR)
+
+- **`main`** = 통합 base. **`main`에 직접 push 금지** — PR로만 반영.
+- 작업은 **현재 브랜치 하나**에서만 커밋·푸시 (`spec` / `red` / `green` / `refactoring` / `staging` / `new_features`).
+- **금지:** `git push --all`, `git branch -f`로 타 브랜치를 현재 커밋에 맞추기 (PR diff 소멸).
+- **업로드·푸시 요청 시:** `/push-pr` 절차 — `git push -u origin HEAD` → `main..HEAD` 커밋 있으면 PR 생성.
+- PR Compare: `https://github.com/MINJU-KIMmm/MagicSquare_xx/compare/main...{branch}?expand=1`
+- **git commit·push·PR은 사용자 요청 시에만**
+
 ## AI 행동
 - **한국어**로 응답
 - TDD 작업 시 맨 앞에 **Phase / Layer / Track** 선언  
   (예: `Phase: RED | Layer: entity | Track: D-*`)
 - 요청 범위 밖 파일·기능 추가 금지; harness/구조 변경은 명시 요청 시만
-- **git commit·push는 사용자 요청 시에만**
 - MagicConstant SSOT, ECB 의존 방향, Dual-Track Mock 규칙 위반 시 수정·거부
 
 ## 디렉터리 (Harness)

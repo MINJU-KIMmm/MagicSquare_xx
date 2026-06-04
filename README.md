@@ -89,6 +89,29 @@ MagicSquare_xx/
 
 ---
 
+## Git · PR 워크플로
+
+**원칙:** 변경은 **작업 브랜치**에만 커밋 → **`main`으로 PR**.
+
+| 브랜치 | 용도 |
+|--------|------|
+| `main` | 통합 (PR 머지 대상) |
+| `red` / `green` / `refactoring` | TDD RED / GREEN / REFACTOR |
+| `spec` | Rule·문서·스펙 |
+| `staging` | PR 전 확인 |
+
+```bash
+git checkout red          # 작업 브랜치
+# ... 커밋 ...
+git push -u origin HEAD   # 현재 브랜치만 푸시
+# GitHub: base=main, compare=red → PR 생성
+```
+
+- **하지 않을 것:** `git push --all`, 모든 브랜치를 같은 커밋으로 `branch -f` (PR diff 없어짐)
+- Cursor: `/push-pr` Command, PR 템플릿 `.github/pull_request_template.md`
+
+---
+
 ## 참고
 
 - 설계 맥락: ECB (`MagicSquare`, `SquareValidator`, `Solver`, `GridUI` 등)
