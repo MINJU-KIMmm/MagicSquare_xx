@@ -115,7 +115,7 @@ python -m pytest tests/entity/test_d_loc_01.py -v
 | Problem Definition / PRD | ✅ 초안 |
 | ECB Harness + `.cursorrules` | ✅ 완료 |
 | **RED** (`red` 브랜치) | ⬜ 진행 중 — D-LOC-01 skeleton 등 |
-| **GREEN** (`green` 브랜치) | ⬜ 예정 — `src/` 최소 구현 |
+| **GREEN** (`green` 브랜치) | ✅ **entity** D-LOC-01 · D-SOL-01 PASS + Golden Master |
 | REFACTOR (`refactoring`) | ⬜ 예정 |
 
 상세 Given/Then·pytest 명령: [`docs/tdd-red-todo.md`](docs/tdd-red-todo.md)
@@ -158,7 +158,7 @@ Dual-Track TDD **RED** — `tests/`만 작성, **pytest FAIL** 확인 후 체크
 
 - [ ] **D-006** — `MagicConstant`: `TARGET_SUM==34`, `GRID_SIZE==4`
 - [ ] **D-007** — 10줄 합산, G_valid 전부 34
-- [ ] **D-LOC-01** — `blank_coords()` → `[(2,4),(3,1)]` row-major
+- [x] **D-LOC-01** — `find_blank_coords()` → `[(2,2),(3,3)]` row-major (G1, `0` 빈칸)
 - [ ] **D-LOC-02** — 좌표 1-index (0 없음)
 - [ ] **D-LOC-03** — G2 → `[(2,1),(2,3)]`
 
@@ -231,14 +231,37 @@ Dual-Track TDD **RED** — `tests/`만 작성, **pytest FAIL** 확인 후 체크
 ```bash
 git checkout green
 git merge red             # RED 테스트·문서 반영 (RED 완료 후)
-# src/ 최소 구현 (GREEN)
-python -m pytest tests/entity/test_d_loc_01.py -v
+.\.venv\Scripts\python.exe -m pytest tests/entity/ -v
 git push -u origin HEAD
 # PR: base=main, compare=green
 ```
 
-- [ ] `src/` 최소 구현 — RED 묶음별 통과
-- [ ] `pytest tests/entity tests/control -v` — Logic 회귀 Green
+| Test ID | 상태 (`green`) |
+|---------|----------------|
+| **D-LOC-01** | ✅ `find_blank_coords` PASS |
+| **D-SOL-01** | ✅ `solve_step_a` PASS + Golden matched |
+
+### Golden Master (`D-SOL-01`)
+
+| 항목 | 경로 |
+|------|------|
+| 헬퍼 | `tests/_approval.py` |
+| Golden | `tests/golden/d_sol_01_g1_step_a.approved.txt` |
+| 테스트 | `tests/entity/test_d_sol_01.py::test_d_sol_01_step_a_success` |
+
+```powershell
+# 기준 파일 생성 (1회)
+$env:UPDATE_GOLDEN="1"
+.\.venv\Scripts\python.exe -m pytest tests/entity/test_d_sol_01.py::test_d_sol_01_step_a_success -v
+Remove-Item Env:UPDATE_GOLDEN
+
+# 검증 (matched)
+.\.venv\Scripts\python.exe -m pytest tests/entity/test_d_sol_01.py::test_d_sol_01_step_a_success -v
+```
+
+- [x] entity GREEN — D-LOC-01, D-SOL-01
+- [x] Golden Master — `d_sol_01_g1_step_a.approved.txt` matched
+- [ ] `pytest tests/control/ -v` — control Validator (Session 3)
 
 ---
 
