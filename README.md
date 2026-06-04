@@ -79,8 +79,9 @@ MagicSquare_xx/
 | Mom Test STEP 1 | ✅ 완료 |
 | Problem Definition / PRD | ✅ 초안 |
 | ECB Harness + `.cursorrules` | ✅ 완료 |
-| **RED** (실패 테스트) | ⬜ 진행 중 — **현재 묶음: U-IN-01, U-IN-02** (boundary) |
-| GREEN / REFACTOR | ⬜ 예정 |
+| **RED** (`red` 브랜치) | ⬜ 진행 중 — D-LOC-01 skeleton 등 |
+| **GREEN** (`green` 브랜치) | ⬜ 예정 — `src/` 최소 구현 |
+| REFACTOR (`refactoring`) | ⬜ 예정 |
 
 상세 Given/Then·pytest 명령: [`docs/tdd-red-todo.md`](docs/tdd-red-todo.md)
 
@@ -188,7 +189,18 @@ Dual-Track TDD **RED** — `tests/`만 작성, **pytest FAIL** 확인 후 체크
 
 ---
 
-## GREEN 이후 (참고)
+## GREEN 단계 (`green` 브랜치)
+
+**RED가 끝난 묶음만** `green`에서 `src/` 최소 구현 → 해당 테스트 **PASS**.
+
+```bash
+git checkout green
+git merge red             # RED 테스트·문서 반영 (RED 완료 후)
+# src/ 최소 구현 (GREEN)
+python -m pytest tests/entity/test_d_loc_01.py -v
+git push -u origin HEAD
+# PR: base=main, compare=green
+```
 
 - [ ] `src/` 최소 구현 — RED 묶음별 통과
 - [ ] `pytest tests/entity tests/control -v` — Logic 회귀 Green
@@ -197,21 +209,31 @@ Dual-Track TDD **RED** — `tests/`만 작성, **pytest FAIL** 확인 후 체크
 
 ## Git · PR 워크플로
 
-**원칙:** 변경은 **작업 브랜치**에만 커밋 → **`main`으로 PR**.
+**원칙:** TDD **단계마다 브랜치 분리** → **`main`으로 PR**.
 
-| 브랜치 | 용도 |
-|--------|------|
-| `main` | 통합 (PR 머지 대상) |
-| `red` / `green` / `refactoring` | TDD RED / GREEN / REFACTOR |
-| `spec` | Rule·문서·스펙 |
-| `staging` | PR 전 확인 |
+| 브랜치 | TDD 단계 | 작업 내용 |
+|--------|----------|-----------|
+| `main` | 통합 | PR 머지 대상 |
+| **`red`** | **RED** | `tests/` 실패 테스트만 (`src/` 수정 금지) |
+| **`green`** | **GREEN** | `src/` 최소 구현 (테스트 PASS) |
+| `refactoring` | REFACTOR | 구조 개선, 동작 동일 |
+| `spec` | 문서·스펙 | PRD, Rule, RED 설계 문서 |
+| `staging` | 확인 | PR 전 검토 |
 
 ```bash
-git checkout red          # 작업 브랜치
-# ... 커밋 ...
-git push -u origin HEAD   # 현재 브랜치만 푸시
-# GitHub: base=main, compare=red → PR 생성
+# RED
+git checkout red
+# tests/ 작성 → pytest FAIL
+git push -u origin HEAD
+
+# GREEN (red 완료 후)
+git checkout green
+git merge red
+# src/ 작성 → pytest PASS
+git push -u origin HEAD
 ```
+
+- **하지 않을 것:** RED를 `spec`/`green`에 넣기, GREEN을 `red`에 넣기, `git push --all`, `branch -f`로 타 브랜치 강제 동기화
 
 - **하지 않을 것:** `git push --all`, 모든 브랜치를 같은 커밋으로 `branch -f` (PR diff 없어짐)
 - Cursor: `/push-pr` Command, PR 템플릿 `.github/pull_request_template.md`
