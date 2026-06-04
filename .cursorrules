@@ -1,0 +1,52 @@
+# MagicSquare_xx / MagicSquare_1004 — Cursor Rules
+
+## 프로젝트
+4×4 부분 마방진. ECB + Dual-Track TDD. 근거 문서: `Report/01`, `Report/02`, `docs/PRD.md`.
+
+## 도메인
+- 격자 **4×4**, 숫자 **1~16** (각 1회), **빈칸 정확히 2개**
+- 마방진 상수 **34** — `MagicConstant` SSOT (`34`·`16` 리터럴 산재 금지)
+- 검산 **10줄**: 행 4 + 열 4 + 주대각선 + 반대각선, 각 합 = 34
+- 솔루션 출력: `int[6]` = `[r1, c1, n1, r2, c2, n2]`, 좌표 **1-index** (행·열 모두)
+- 오류 코드 **E001~E007**: **boundary** 계층이 매핑·표현
+- **entity는 E001~E005 처리 금지** — 입력 형식·범위·빈칸 수·중복 등 I/O 검증은 boundary; entity는 순수 도메인 상태만
+
+## 아키텍처 (ECB)
+```
+boundary → control → entity
+```
+- **entity → \* import 금지** (상위·형제·I/O 계층 참조 없음)
+- **entity**: `MagicSquare`, `Cell` 등 도메인 모델·규칙
+- **control**: `SquareValidator`, `Solver`, `MissingFinder` — 유스케이스 조율
+- **boundary**: `GridUI`, `ResultDisplay` — 입출력·E001~E007 매핑
+
+## Dual-Track
+| Track | Layer | Mock |
+|-------|-------|------|
+| Logic (`D-*`) | entity, control | **Domain Mock 금지** |
+| UI (`U-*`) | boundary | Mock 허용 |
+
+- 테스트 ID: `D-*` (Logic), `U-*` (UI)
+- 파일명: `test_d_*` / `test_u_*`
+- 배치: `tests/entity/`, `tests/control/`, `tests/boundary/`
+
+## TDD
+- 사이클: **RED → GREEN → REFACTOR** (순서·의도 엄수)
+- RED 통과를 위한 **assert 완화·`skip`·`xfail` 금지**
+- Green: 해당 테스트를 통과하는 **최소** 구현만
+- Refactor: Green 유지하며 구조 개선; MagicConstant·ECB 경계 유지
+
+## AI 행동
+- **한국어**로 응답
+- TDD 작업 시 맨 앞에 **Phase / Layer / Track** 선언  
+  (예: `Phase: RED | Layer: entity | Track: D-*`)
+- 요청 범위 밖 파일·기능 추가 금지; harness/구조 변경은 명시 요청 시만
+- **git commit·push는 사용자 요청 시에만**
+- MagicConstant SSOT, ECB 의존 방향, Dual-Track Mock 규칙 위반 시 수정·거부
+
+## 디렉터리 (Harness)
+```
+src/entity/   src/control/   src/boundary/
+tests/entity/ tests/control/ tests/boundary/
+pyproject.toml — pytest only
+```
