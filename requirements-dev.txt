@@ -1,0 +1,2 @@
+# Dev dependencies for .venv (pytest reads config from pyproject.toml)
+pytest>=8.0
